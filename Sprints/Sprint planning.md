@@ -10,6 +10,8 @@ El día de hoy, todos los miembros del grupo hemos realizado una reunión para c
 Asimismo, se ha iniciado la distribución de tareas entre los integrantes, asignando roles específicos en función de los puntos fuertes de cada uno para optimizar el desarrollo inicial.
 
 ---
+**Proofhub:**
+<img width="602" height="296" alt="image" src="https://github.com/user-attachments/assets/2c529ed1-b5d2-4247-a65c-4504e888cf8c" />
 
 ## Distribución de Tareas
 
@@ -35,3 +37,7 @@ Hoy es el segundo día de proyecto; hemos realizado una reunión para tener clar
 | **Aritz** | Realizará el sprint planning y la documentación de las tecnologías utilizadas en el proyecto. |
 | **Javier** | Seguirá con el diagrama de red. |
 | **Cesc** | Seguirá ayudando a Manuel con la implementación de redes. |
+
+**Proofhub:**
+<img width="602" height="296" alt="image" src="https://github.com/user-attachments/assets/08ca4a19-3dbe-4e4d-9ee6-c0445ea6a42f" />
+
