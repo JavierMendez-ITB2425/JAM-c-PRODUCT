@@ -11,6 +11,7 @@ Asimismo, se ha iniciado la distribución de tareas entre los integrantes, asign
 
 ---
 **Proofhub:**
+
 <img width="602" height="296" alt="image" src="https://github.com/user-attachments/assets/2c529ed1-b5d2-4247-a65c-4504e888cf8c" />
 
 ## Distribución de Tareas
@@ -39,5 +40,6 @@ Hoy es el segundo día de proyecto; hemos realizado una reunión para tener clar
 | **Cesc** | Seguirá ayudando a Manuel con la implementación de redes. |
 
 **Proofhub:**
+
 <img width="602" height="296" alt="image" src="https://github.com/user-attachments/assets/08ca4a19-3dbe-4e4d-9ee6-c0445ea6a42f" />
 
