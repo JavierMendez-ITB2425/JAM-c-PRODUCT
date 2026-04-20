@@ -43,6 +43,7 @@ Hoy es el segundo día de proyecto; hemos realizado una reunión para tener clar
 
 <img width="602" height="296" alt="image" src="https://github.com/user-attachments/assets/08ca4a19-3dbe-4e4d-9ee6-c0445ea6a42f" />
 
+
 **Fecha:** 20/04/2026
 
 ## Resumen de la Jornada
