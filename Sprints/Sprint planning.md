@@ -43,3 +43,24 @@ Hoy es el segundo día de proyecto; hemos realizado una reunión para tener clar
 
 <img width="602" height="296" alt="image" src="https://github.com/user-attachments/assets/08ca4a19-3dbe-4e4d-9ee6-c0445ea6a42f" />
 
+**Fecha:** 20/04/2026
+
+## Resumen de la Jornada
+Hoy es el tercer día de proyecto y comenzaremos con tareas nuevas definidas en un documento conjunto que tenemos todos los integrantes del grupo. El objetivo de hoy es avanzar o, si se puede, finalizar las tareas que teníamos asignadas el día anterior. 
+
+---
+
+## Distribución de Tareas
+
+| Integrante | Responsabilidades |
+| :--- | :--- |
+| **Manuel** | Dedicará el día de hoy a realizar el balanceador de carga. |
+| **Aritz** | Realizará la instalación y configuración del SOC. |
+| **Javier** | Se encargará de la implementación y  configuración del firewall. |
+| **Cesc** | Realizará la implementación de la página web probando el código en Isard debido a que no tenemos ninguna máquina en AWS para servir este servicio. |
+
+**Proofhub:**
+
+<img width="601" height="292" alt="image" src="https://github.com/user-attachments/assets/5d2d6601-05ca-4a05-8518-5a4d51a0580c" />
+
+
