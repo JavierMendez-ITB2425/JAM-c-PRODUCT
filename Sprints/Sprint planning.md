@@ -81,6 +81,7 @@ Hoy es el cuarto día de este sprint y uno de los últimos días de este sprint.
 | **Cesc** | Continuará puliendo la página web. |
 
 **Proofhub:**
-<img width="603" height="283" alt="image" src="https://github.com/user-attachments/assets/60e1cfc9-549f-4a2d-8868-51d063f57c64" />
+<img width="1737" height="827" alt="image" src="https://github.com/user-attachments/assets/b70676bb-bf13-4f62-8948-a3e4fd7d856b" />
+
 
 
