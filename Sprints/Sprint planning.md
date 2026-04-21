@@ -64,4 +64,23 @@ Hoy es el tercer día de proyecto y comenzaremos con tareas nuevas definidas en 
 
 <img width="601" height="292" alt="image" src="https://github.com/user-attachments/assets/5d2d6601-05ca-4a05-8518-5a4d51a0580c" />
 
+**Fecha:** 21/04/2026
+
+## Resumen de la Jornada
+Hoy es el cuarto día de este sprint y uno de los últimos días de este sprint. El día de hoy continuaremos con las tareas del último día, las cuales no pudimos avanzar mucho debido a que tuvimos problemas de conectividad con el firewall, los cuales nos imposibilitaron el trabajo.
+
+---
+
+## Distribución de Tareas
+
+| Integrante | Responsabilidades |
+| :--- | :--- |
+| **Manuel** | Dedicará el día de hoy a seguir con su tarea de implementación del balanceo de carga. |
+| **Aritz** | Continuará con la implementación del SOC y revisará el Proofhub. |
+| **Javier** | Se encargará de resolver el problema actual con el firewall, el cual nos imposibilita la conectividad con las máquinas. |
+| **Cesc** | Continuará puliendo la página web. |
+
+**Proofhub:**
+<img width="603" height="283" alt="image" src="https://github.com/user-attachments/assets/60e1cfc9-549f-4a2d-8868-51d063f57c64" />
+
 
