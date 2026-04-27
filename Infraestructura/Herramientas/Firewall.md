@@ -93,4 +93,21 @@ Para que las reglas estén aplicadas hasta después del reinicio instalaremos **
 **sudo netfilter-persistent save**  
 ![image12](https://github.com/JavierMendez-ITB2425/JAM-c-PRODUCT/blob/main/Infraestructura/Herramientas/src%20firewall/12.png)  
 
+**DNAT (Destination NAT).**  
+Para redirigir todo el tráfico web (**puertos 80 y 443**) que llega al Firewall hacia la máquina de la subred SOC (**10.0.6.152**), necesitamos implementar el **DNAT**.
+
+Cómo configuramos una política de "Denegar todo" (DROP) en la cadena FORWARD anteriormente, no basta con hacer la redirección; también debemos autorizar explícitamente el paso de ese tráfico hacia el servidor interno.  
+**Comandos:**  
+***Redireccionar el tráfico HTTP (80)***  
+**sudo iptables \-t nat \-A PREROUTING \-p tcp \--dport 80 \-j DNAT \--to-destination 10.0.6.152:80**  
+***Redireccionar el tráfico HTTPS (443)***  
+**sudo iptables \-t nat \-A PREROUTING \-p tcp \--dport 443 \-j DNAT \--to-destination 10.0.6.152:443**  
+![image13](https://github.com/JavierMendez-ITB2425/JAM-c-PRODUCT/blob/main/Infraestructura/Herramientas/src%20firewall/13.png)
+
+***Permitir que el tráfico pase a través del Firewall hacia el servidor SOC***  
+**sudo iptables \-A FORWARD \-p tcp \-d 10.0.6.152 \--dport 80 \-j ACCEPT**  
+**sudo iptables \-A FORWARD \-p tcp \-d 10.0.6.152 \--dport 443 \-j ACCEPT**  
+![image14](https://github.com/JavierMendez-ITB2425/JAM-c-PRODUCT/blob/main/Infraestructura/Herramientas/src%20firewall/14.png)  
+**IMPORTANTE:** Guardar la configuración con el comando **sudo netfilter-persistent save**.  
+
 
