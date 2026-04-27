@@ -105,6 +105,24 @@ Iniciamos el Sprint 2 arrastrando algunas tareas del Sprint 1 que no se concluye
 **Proofhub:**
 <img width="1749" height="895" alt="image" src="https://github.com/user-attachments/assets/92cb9c4b-d7a4-4f46-b00c-90849886e354" />
 
+**Fecha:** 28/04/2026
+
+## Resumen de la Jornada
+mañana
+
+---
+
+## Distribución de Tareas
+
+| Integrante | Responsabilidades |
+| :--- | :--- |
+| **Manuel** | o |
+| **Aritz** | o |
+| **Javier** | o |
+| **Cesc** | o |
+
+---
+**Proofhub:**
 
 
 
