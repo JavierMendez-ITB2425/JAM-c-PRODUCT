@@ -9,3 +9,7 @@ Como resultado, elegimos AWS debido a que priorizamos la alta configuración ant
 
 ## Orquestación y aprovisionamiento (Terraform):
 En nuestro proyecto implementaremos Terraform para tener una infraestructura de servidores con redundancia; esto debido a que, si alguna máquina por algún motivo colapsa, podremos restablecerla con esta herramienta. Además de la gran función de redundancia, podemos gestionar el estado y planificar cambios en las máquinas.
+
+## Detección de amenazas y gestión de seguridad (Wazuh):
+Para la monitorización y protección de nuestra infraestructura en el SCO, analizamos diferentes soluciones de gestión de eventos e información de seguridad (SIEM). Evaluamos principalmente dos alternativas: el uso de un stack ELK tradicional (Elasticsearch, Logstash y Kibana) frente a la plataforma especializada Wazuh.
+Tras comparar ambas herramientas, nos decantamos por Wazuh debido a su preconfiguración de capacidades XDR y porque queríamos probar herramientas nuevas.
