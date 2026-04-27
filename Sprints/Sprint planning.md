@@ -83,5 +83,28 @@ Hoy es el cuarto día de este sprint y uno de los últimos días de este sprint.
 **Proofhub:**
 <img width="1737" height="827" alt="image" src="https://github.com/user-attachments/assets/b70676bb-bf13-4f62-8948-a3e4fd7d856b" />
 
+## Sprint 2
+
+**Fecha:** 27/04/2026
+
+## Resumen de la Jornada
+Iniciamos el Sprint 2 arrastrando algunas tareas del Sprint 1 que no se concluyeron por problemas con los servidores. El equipo ha acordado moverlas a este nuevo Sprint para darles seguimiento inmediato.
+
+---
+
+## Distribución de Tareas
+
+| Integrante | Responsabilidades |
+| :--- | :--- |
+| **Manuel** | Hoy mirará de implementar el servidor de streaming mientras termina de pulir el balanceador de carga. |
+| **Aritz** | Se encargará de realizar el Sprint Review y Planning, organizar el Proofhub y continuar con la implementación del SOC|
+| **Javier** | Pasará la documentación del Firewall al Github y mirará como implementar un Captcha en nuestra página web |
+| **Cesc** | Sigue puliendo la página web |
+
+---
+**Proofhub:**
+<img width="1749" height="895" alt="image" src="https://github.com/user-attachments/assets/92cb9c4b-d7a4-4f46-b00c-90849886e354" />
+
+
 
 
