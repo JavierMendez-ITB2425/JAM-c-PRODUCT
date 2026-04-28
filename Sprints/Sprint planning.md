@@ -108,7 +108,7 @@ Iniciamos el Sprint 2 arrastrando algunas tareas del Sprint 1 que no se concluye
 **Fecha:** 28/04/2026
 
 ## Resumen de la Jornada
-mañana
+Hoy es el segundo día del Sprint 2; el día de hoy ha faltado un miembro del grupo (Javier) debido a motivos médicos. Hemos realizado una reunión los 3 miembros presentes del grupo para saber qué tareas vamos a realizar cada uno. En general, cada uno seguiría con sus tareas.
 
 ---
 
@@ -116,10 +116,10 @@ mañana
 
 | Integrante | Responsabilidades |
 | :--- | :--- |
-| **Manuel** | o |
-| **Aritz** | o |
-| **Javier** | o |
-| **Cesc** | o |
+| **Manuel** | Continuará con la implementación del servidor de streaming que comenzó ayer y su documentación y, además de eso, mirará de arreglar algunos errores que hay en el firewall. |
+| **Aritz** | Realizará el Sprint Planning de hoy y seguirá con la implementación del SOC. |
+| **Javier** | No ha venido. |
+| **Cesc** | Se encargará de implementar seguridad en la web. |
 
 ---
 **Proofhub:**
