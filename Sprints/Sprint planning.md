@@ -123,6 +123,7 @@ Hoy es el segundo día del Sprint 2; el día de hoy ha faltado un miembro del gr
 
 ---
 **Proofhub:**
+<img width="1731" height="821" alt="image" src="https://github.com/user-attachments/assets/f5a47e44-b831-4e9e-9a62-b03b8f294fa3" />
 
 
 
