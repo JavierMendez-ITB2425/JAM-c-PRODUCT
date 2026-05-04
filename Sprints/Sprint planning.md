@@ -125,5 +125,23 @@ Hoy es el segundo día del Sprint 2; el día de hoy ha faltado un miembro del gr
 **Proofhub:**
 <img width="1731" height="821" alt="image" src="https://github.com/user-attachments/assets/f5a47e44-b831-4e9e-9a62-b03b8f294fa3" />
 
+**Fecha:** 04/05/2026
+
+## Resumen de la Jornada
+El día de hoy hemos tenido un pequeño problema para avanzar el proyecto y es debido a que nuestra licencia de AWS ha caducado; por ende, no podemos entrar a nuestras máquinas, ya que no las tenemos. Entre todos los miembros del grupo hemos acordado avanzar documentación y tareas que no requieran el uso de AWS hasta que no tengamos otra licencia.
+
+---
+
+## Distribución de Tareas
+
+| Integrante | Responsabilidades |
+| :--- | :--- |
+| **Manuel** | Seguirá con la implementación del servicio de streaming, el cual ya está casi terminado, y tendrá la responsabilidad de levantar todas las máquinas cuando tengamos de vuelta la licencia de AWS. |
+| **Aritz** | Realizar el sprint planning del día de hoy, organizar el ProofHub y rematar la implementación del SOC.|
+| **Javier** | Mirará de implementar un captcha en el proyecto. |
+| **Cesc** | Seguirá implementando la seguridad en la web. |
+
+---
+**Proofhub:**
 
 
