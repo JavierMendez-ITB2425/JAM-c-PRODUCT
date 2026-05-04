@@ -1,6 +1,6 @@
 resource "aws_security_group" "sg_firewall" {
   name        = "sg_firewall"
-  description = "Grupo para el puerto WAN del Firewall"
+  description = "SG cara publica del firewall"
   vpc_id      = aws_vpc.main.id
 
   ingress {
@@ -16,6 +16,12 @@ resource "aws_security_group" "sg_firewall" {
     cidr_blocks = ["0.0.0.0/0"]
   }
   ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  ingress {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
@@ -27,11 +33,12 @@ resource "aws_security_group" "sg_firewall" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+  tags = { Name = "SG-Firewall" }
 }
 
 resource "aws_security_group" "sg_servicios" {
   name        = "sg_servicios"
-  description = "Grupo para redes internas"
+  description = "SG para subredes internas"
   vpc_id      = aws_vpc.main.id
 
   ingress {
@@ -46,4 +53,5 @@ resource "aws_security_group" "sg_servicios" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+  tags = { Name = "SG-Servicios" }
 }
