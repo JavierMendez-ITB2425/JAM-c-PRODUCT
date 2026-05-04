@@ -143,5 +143,6 @@ El día de hoy hemos tenido un pequeño problema para avanzar el proyecto y es d
 
 ---
 **Proofhub:**
+<img width="1731" height="771" alt="image" src="https://github.com/user-attachments/assets/63b1fafc-8e74-4aca-92cf-0e058713493b" />
 
 
