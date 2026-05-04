@@ -7,7 +7,10 @@ data "aws_ami" "ubuntu" {
   owners = ["099720109477"]
 }
 
-# --- INTERFACES DEL FIREWALL (NODO 1) ---
+# ─────────────────────────────────────────────────────────
+# ENI DEL FIREWALL — una sola, source_dest_check=false
+# es lo que permite actuar como router
+# ─────────────────────────────────────────────────────────
 resource "aws_network_interface" "fw_wan" {
   subnet_id         = aws_subnet.public.id
   security_groups   = [aws_security_group.sg_firewall.id]
@@ -15,99 +18,147 @@ resource "aws_network_interface" "fw_wan" {
   tags = { Name = "FW-eth0-WAN" }
 }
 
-resource "aws_network_interface" "fw_lan_services" {
-  subnet_id         = aws_subnet.private_services.id
-  security_groups   = [aws_security_group.sg_servicios.id]
-  source_dest_check = false
-  tags = { Name = "FW-eth1-LAN-Servicios" }
-}
-
-resource "aws_network_interface" "fw_lan_soc" {
-  subnet_id         = aws_subnet.private_soc.id
-  security_groups   = [aws_security_group.sg_servicios.id]
-  source_dest_check = false
-  tags = { Name = "FW-eth2-LAN-SOC" }
-}
-
-# --- IP ELÁSTICA PARA EL FIREWALL ---
 resource "aws_eip" "fw_eip" {
   domain            = "vpc"
   network_interface = aws_network_interface.fw_wan.id
   depends_on        = [aws_internet_gateway.igw]
 }
 
-# --- NODO 1: FIREWALL/ROUTER ---
+# ─────────────────────────────────────────────────────────
+# NODO FIREWALL / ROUTER (Ahora también albergará Suricata)
+# ─────────────────────────────────────────────────────────
 resource "aws_instance" "firewall" {
   ami           = data.aws_ami.ubuntu.id
-  instance_type = "t3.medium"
+  instance_type = "t2.micro"
   key_name      = var.key_name
 
   network_interface {
     network_interface_id = aws_network_interface.fw_wan.id
     device_index         = 0
   }
-  network_interface {
-    network_interface_id = aws_network_interface.fw_lan_services.id
-    device_index         = 1
-  }
-  network_interface {
-    network_interface_id = aws_network_interface.fw_lan_soc.id
-    device_index         = 2
-  }
 
-  tags = { Name = "Nodo1-Firewall" }
+  user_data = <<-EOF
+    #!/bin/bash
+    set -e
+
+    # 1. Activar forwarding
+    echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf
+    sysctl -p
+
+    # 2. NAT — enmascara con la IP publica del firewall
+    iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+
+    # 3. Permitir trafico de vuelta de conexiones ya establecidas
+    iptables -A FORWARD -m state --state ESTABLISHED,RELATED -j ACCEPT
+
+    # 4. Reglas entre subredes
+    # Visitantes → Gestion (replays, streaming) PERMITIDO
+    iptables -A FORWARD -s 10.0.3.0/24 -d 10.0.4.0/24 -p tcp --dport 80   -j ACCEPT
+    iptables -A FORWARD -s 10.0.3.0/24 -d 10.0.4.0/24 -p tcp --dport 8000 -j ACCEPT
+    iptables -A FORWARD -s 10.0.3.0/24 -d 10.0.4.0/24 -p tcp --dport 1935 -j ACCEPT
+
+    # Visitantes → SOC BLOQUEADO
+    iptables -A FORWARD -s 10.0.3.0/24 -d 10.0.6.0/24 -j DROP
+
+    # Gestion ↔ SOC PERMITIDO (agentes Wazuh, Prometheus scraping)
+    iptables -A FORWARD -s 10.0.4.0/24 -d 10.0.6.0/24 -j ACCEPT
+    iptables -A FORWARD -s 10.0.6.0/24 -d 10.0.4.0/24 -j ACCEPT
+
+    # Todo lo demas dentro de la VPC puede salir a internet por el firewall
+    iptables -A FORWARD -s 10.0.0.0/16 -j ACCEPT
+
+    # 5. Persistir reglas
+    apt-get update -q
+    DEBIAN_FRONTEND=noninteractive apt-get install -y iptables-persistent
+    netfilter-persistent save
+  EOF
+
+  tags = { Name = "Nodo1-Firewall-IDS" }
 }
 
-# --- RUTAS PRIVADAS HACIA LAS INTERFACES DEL FIREWALL ---
-resource "aws_route_table" "rt_services" {
-  vpc_id = aws_vpc.main.id
-  route {
-    cidr_block           = "0.0.0.0/0"
-    network_interface_id = aws_network_interface.fw_lan_services.id
-  }
-}
-resource "aws_route_table_association" "assoc_services" {
-  subnet_id      = aws_subnet.private_services.id
-  route_table_id = aws_route_table.rt_services.id
-}
-
-resource "aws_route_table" "rt_soc" {
-  vpc_id = aws_vpc.main.id
-  route {
-    cidr_block           = "0.0.0.0/0"
-    network_interface_id = aws_network_interface.fw_lan_soc.id
-  }
-}
-resource "aws_route_table_association" "assoc_soc" {
-  subnet_id      = aws_subnet.private_soc.id
-  route_table_id = aws_route_table.rt_soc.id
-}
-
-# --- RESTO DE LOS NODOS ---
-resource "aws_instance" "balancer" {
+# ─────────────────────────────────────────────────────────
+# SUBNET VISITANTES (10.0.3.0/24)
+# ─────────────────────────────────────────────────────────
+resource "aws_instance" "portal_cautivo" {
   ami                    = data.aws_ami.ubuntu.id
-  instance_type          = "t3.medium"
-  subnet_id              = aws_subnet.private_services.id
+  instance_type          = "t2.micro"
+  subnet_id              = aws_subnet.visitantes.id
   vpc_security_group_ids = [aws_security_group.sg_servicios.id]
   key_name               = var.key_name
-  tags = { Name = "Nodo2-Balancer" }
+  tags = { Name = "Visitantes-Nginx-Portal" }
 }
 
-resource "aws_instance" "streaming" {
-  count                  = 2
+resource "aws_instance" "iperf" {
   ami                    = data.aws_ami.ubuntu.id
-  instance_type          = "t3.small"
-  subnet_id              = aws_subnet.private_services.id
+  instance_type          = "t2.micro"
+  subnet_id              = aws_subnet.visitantes.id
   vpc_security_group_ids = [aws_security_group.sg_servicios.id]
   key_name               = var.key_name
-  tags = { Name = "Nodo${count.index + 3}-Streaming" }
+  tags = { Name = "Visitantes-iPerf3" }
 }
 
-resource "aws_instance" "soc" {
+# ─────────────────────────────────────────────────────────
+# SUBNET GESTION/BROADCAST (10.0.4.0/24)
+# ─────────────────────────────────────────────────────────
+resource "aws_instance" "balanceador_gestion" {
   ami                    = data.aws_ami.ubuntu.id
-  instance_type          = "t3.large"
-  subnet_id              = aws_subnet.private_soc.id
+  instance_type          = "t2.micro"
+  subnet_id              = aws_subnet.gestion.id
   vpc_security_group_ids = [aws_security_group.sg_servicios.id]
   key_name               = var.key_name
-  tags = { Name = "Nodo5-SOC" }
+  tags = { Name = "Gestion-Balanceador" }
+}
+
+resource "aws_instance" "icecast" {
+  ami                    = data.aws_ami.ubuntu.id
+  instance_type          = "t2.micro"
+  subnet_id              = aws_subnet.gestion.id
+  vpc_security_group_ids = [aws_security_group.sg_servicios.id]
+  key_name               = var.key_name
+  tags = { Name = "Gestion-Icecast2" }
+}
+
+resource "aws_instance" "ftp" {
+  ami                    = data.aws_ami.ubuntu.id
+  instance_type          = "t2.micro"
+  subnet_id              = aws_subnet.gestion.id
+  vpc_security_group_ids = [aws_security_group.sg_servicios.id]
+  key_name               = var.key_name
+  tags = { Name = "Gestion-vsftpd" }
+}
+
+# ─────────────────────────────────────────────────────────
+# SUBNET SOC (10.0.6.0/24)
+# ─────────────────────────────────────────────────────────
+resource "aws_instance" "soc_core" {
+  ami                    = data.aws_ami.ubuntu.id
+  instance_type          = "t3.large" # Consolidado para Docker: Wazuh, TheHive, Grafana, Prometheus
+  subnet_id              = aws_subnet.soc.id
+  vpc_security_group_ids = [aws_security_group.sg_servicios.id]
+  key_name               = var.key_name
+  
+  root_block_device {
+    volume_size = 50 # Recomendable aumentar el disco para logs y BBDD
+    volume_type = "gp3"
+  }
+
+  tags = { Name = "SOC-Core-Docker" }
+}
+
+# ─────────────────────────────────────────────────────────
+# OUTPUTS
+# ─────────────────────────────────────────────────────────
+output "firewall_ip_publica" {
+  value = aws_eip.fw_eip.public_ip
+}
+
+output "ips_privadas" {
+  value = {
+    visitantes_portal   = aws_instance.portal_cautivo.private_ip
+    visitantes_iperf    = aws_instance.iperf.private_ip
+    gestion_balanceador = aws_instance.balanceador_gestion.private_ip
+    gestion_icecast     = aws_instance.icecast.private_ip
+    gestion_ftp         = aws_instance.ftp.private_ip
+    soc_core_docker     = aws_instance.soc_core.private_ip
+  }
 }
