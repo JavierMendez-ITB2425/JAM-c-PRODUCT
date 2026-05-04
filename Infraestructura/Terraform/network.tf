@@ -6,39 +6,91 @@ resource "aws_vpc" "main" {
 
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.main.id
+  tags   = { Name = "IGW-Estadio" }
 }
 
 resource "aws_subnet" "public" {
-  vpc_id                  = aws_vpc.main.id
-  cidr_block              = "10.0.1.0/24"
-  map_public_ip_on_launch = true
-  availability_zone       = "us-east-1a"
-  tags = { Name = "Subnet-Publica-Firewall" }
-}
-
-resource "aws_subnet" "private_services" {
   vpc_id            = aws_vpc.main.id
-  cidr_block        = "10.0.2.0/24"
+  cidr_block        = "10.0.0.0/24"
   availability_zone = "us-east-1a"
-  tags = { Name = "Subnet-Privada-Servicios" }
+  tags              = { Name = "Subnet-Firewall-WAN" }
 }
 
-resource "aws_subnet" "private_soc" {
+resource "aws_subnet" "visitantes" {
   vpc_id            = aws_vpc.main.id
   cidr_block        = "10.0.3.0/24"
   availability_zone = "us-east-1a"
-  tags = { Name = "Subnet-Privada-SOC" }
+  tags              = { Name = "Subnet-Visitantes" }
 }
 
-resource "aws_route_table" "public_rt" {
+resource "aws_subnet" "gestion" {
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = "10.0.4.0/24"
+  availability_zone = "us-east-1a"
+  tags              = { Name = "Subnet-Gestion" }
+}
+
+resource "aws_subnet" "soc" {
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = "10.0.6.0/24"
+  availability_zone = "us-east-1a"
+  tags              = { Name = "Subnet-SOC" }
+}
+
+# Subnet pública del firewall sale por IGW
+resource "aws_route_table" "rt_public" {
   vpc_id = aws_vpc.main.id
   route {
     cidr_block = "0.0.0.0/0"
     gateway_id = aws_internet_gateway.igw.id
   }
+  tags = { Name = "RT-Public" }
 }
 
-resource "aws_route_table_association" "public_assoc" {
+resource "aws_route_table_association" "assoc_public" {
   subnet_id      = aws_subnet.public.id
-  route_table_id = aws_route_table.public_rt.id
+  route_table_id = aws_route_table.rt_public.id
 }
+
+# Las 3 subredes privadas apuntan a la ENI del firewall
+resource "aws_route_table" "rt_visitantes" {
+  vpc_id = aws_vpc.main.id
+  route {
+    cidr_block           = "0.0.0.0/0"
+    network_interface_id = aws_network_interface.fw_wan.id
+  }
+  tags = { Name = "RT-Visitantes" }
+}
+
+resource "aws_route_table_association" "assoc_visitantes" {
+  subnet_id      = aws_subnet.visitantes.id
+  route_table_id = aws_route_table.rt_visitantes.id
+}
+
+resource "aws_route_table" "rt_gestion" {
+  vpc_id = aws_vpc.main.id
+  route {
+    cidr_block           = "0.0.0.0/0"
+    network_interface_id = aws_network_interface.fw_wan.id
+  }
+  tags = { Name = "RT-Gestion" }
+}
+
+resource "aws_route_table_association" "assoc_gestion" {
+  subnet_id      = aws_subnet.gestion.id
+  route_table_id = aws_route_table.rt_gestion.id
+}
+
+resource "aws_route_table" "rt_soc" {
+  vpc_id = aws_vpc.main.id
+  route {
+    cidr_block           = "0.0.0.0/0"
+    network_interface_id = aws_network_interface.fw_wan.id
+  }
+  tags = { Name = "RT-SOC" }
+}
+
+resource "aws_route_table_association" "assoc_soc" {
+  subnet_id      = aws_subnet.soc.id
+  route_table_id = aws_route_table.rt_soc.id
+} 
