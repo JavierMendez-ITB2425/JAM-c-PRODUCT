@@ -145,7 +145,7 @@ El día de hoy hemos tenido un pequeño problema para avanzar el proyecto y es d
 **Proofhub:**
 <img width="1731" height="771" alt="image" src="https://github.com/user-attachments/assets/63b1fafc-8e74-4aca-92cf-0e058713493b" />
 
-**Fecha:** 04/05/2026
+**Fecha:** 05/05/2026
 
 ## Resumen de la Jornada
 Hoy seguiremos con varias tareas que tuvimos el anterior día asignadas; al final, ayer pudimos recuperar las máquinas y pudimos configurarlas a medias, tarea a la cual nos dedicaremos hoy aparte de proseguir con tareas anteriores.
