@@ -145,4 +145,25 @@ El día de hoy hemos tenido un pequeño problema para avanzar el proyecto y es d
 **Proofhub:**
 <img width="1731" height="771" alt="image" src="https://github.com/user-attachments/assets/63b1fafc-8e74-4aca-92cf-0e058713493b" />
 
+**Fecha:** 04/05/2026
+
+## Resumen de la Jornada
+Hoy seguiremos con varias tareas que tuvimos el anterior día asignadas; al final, ayer pudimos recuperar las máquinas y pudimos configurarlas a medias, tarea a la cual nos dedicaremos hoy aparte de proseguir con tareas anteriores.
+
+---
+
+## Distribución de Tareas
+
+| Integrante | Responsabilidades |
+| :--- | :--- |
+| **Manuel** | Se encargará de montar otra vez el servidor de streaming, el cual perdimos, y mejorarlo. |
+| **Aritz** | Realizará el sprint planning del día y seguirá montando el SOC. |
+| **Javier** | Se encargará de montar el captcha y de investigar información para implementar un IDS/IPS para el proyecto. |
+| **Cesc** | Terminará de pulir la seguridad de la página web y mirará de implementar una base de datos.|
+
+---
+**Proofhub:**
+<img width="1726" height="784" alt="image" src="https://github.com/user-attachments/assets/641e92dc-d230-47b7-a0d5-5eeff4217410" />
+
+
 
