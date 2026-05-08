@@ -43,8 +43,7 @@ Comandos utilizados:
 echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 ```
 <img width="589" height="56" alt="image" src="https://github.com/user-attachments/assets/b51ecf6d-7442-4fea-8a71-63e9122f9d33" />
-
-
+<br>
 Seguimos con la instalación oficial de Docker.
 
 ```bash
