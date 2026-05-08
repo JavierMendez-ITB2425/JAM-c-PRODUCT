@@ -21,4 +21,5 @@ sudo apt update
 sudo apt install docker-ce
 
 # Aquí puedes poner una referencia a tu captura
-**[Imagen: Captura_del_terminal.png]**
+<img width="1722" height="790" alt="image" src="https://github.com/user-attachments/assets/bfd9e56e-e6bb-4dfb-9804-18cc28740698" />
+
