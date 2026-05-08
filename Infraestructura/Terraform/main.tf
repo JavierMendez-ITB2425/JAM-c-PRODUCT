@@ -102,29 +102,32 @@ resource "aws_instance" "iperf" {
 # ─────────────────────────────────────────────────────────
 resource "aws_instance" "balanceador_gestion" {
   ami                    = data.aws_ami.ubuntu.id
-  instance_type          = "t2.micro"
+  instance_type          = "t3.large"
   subnet_id              = aws_subnet.gestion.id
   vpc_security_group_ids = [aws_security_group.sg_servicios.id]
   key_name               = var.key_name
+  private_ip             = "10.0.4.242"
   tags = { Name = "Gestion-Balanceador" }
 }
 
 resource "aws_instance" "icecast" {
   ami                    = data.aws_ami.ubuntu.id
-  instance_type          = "t2.micro"
+  instance_type          = "t3.medium"
   subnet_id              = aws_subnet.gestion.id
   vpc_security_group_ids = [aws_security_group.sg_servicios.id]
   key_name               = var.key_name
-  tags = { Name = "Gestion-Icecast2" }
+  private_ip             = "10.0.4.195"
+  tags = { Name = "Gestion-HLS1" }
 }
 
 resource "aws_instance" "ftp" {
   ami                    = data.aws_ami.ubuntu.id
-  instance_type          = "t2.micro"
+  instance_type          = "t3.medium"
   subnet_id              = aws_subnet.gestion.id
   vpc_security_group_ids = [aws_security_group.sg_servicios.id]
   key_name               = var.key_name
-  tags = { Name = "Gestion-vsftpd" }
+  private_ip             = "10.0.4.166"
+  tags = { Name = "Gestion-HLS2" }
 }
 
 # ─────────────────────────────────────────────────────────
@@ -145,6 +148,29 @@ resource "aws_instance" "soc_core" {
   tags = { Name = "SOC-Core-Docker" }
 }
 
+
+
+# ─────────────────────────────────────────────────────────
+# SUBNET DMZ (10.0.5.0/24)
+# ─────────────────────────────────────────────────────────
+
+resource "aws_subnet" "dmz" {
+  vpc_id            = aws_vpc.main.id  # Asegúrate de que tu VPC se llama "main" en tu código
+  cidr_block        = "10.0.5.0/24"
+  availability_zone = "us-east-1a"     # Usa la misma zona que tus otras subredes
+  tags = { Name = "Subnet-DMZ" }
+}
+
+resource "aws_instance" "web_server" {
+  ami                    = data.aws_ami.ubuntu.id
+  instance_type          = "t2.micro"  # Para una web simple, con esto sobra
+  subnet_id              = aws_subnet.dmz.id
+  vpc_security_group_ids = [aws_security_group.sg_servicios.id] # O crea uno nuevo específico para la DMZ
+  key_name               = var.key_name
+  private_ip             = "10.0.5.50" # Le fijamos una IP para tenerla controlada
+  tags = { Name = "DMZ-WebServer" }
+}
+
 # ─────────────────────────────────────────────────────────
 # OUTPUTS
 # ─────────────────────────────────────────────────────────
@@ -160,5 +186,6 @@ output "ips_privadas" {
     gestion_icecast     = aws_instance.icecast.private_ip
     gestion_ftp         = aws_instance.ftp.private_ip
     soc_core_docker     = aws_instance.soc_core.private_ip
+    dmz_web_server      = aws_instance.web_server.private_ip
   }
 }
