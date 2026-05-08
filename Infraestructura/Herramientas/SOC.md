@@ -44,6 +44,7 @@ echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.
 ```
 <img width="589" height="56" alt="image" src="https://github.com/user-attachments/assets/b51ecf6d-7442-4fea-8a71-63e9122f9d33" />
 
+
 Seguimos con la instalación oficial de Docker.
 
 ```bash
