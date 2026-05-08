@@ -21,7 +21,8 @@ sudo apt update
 sudo apt install docker-ce
 
 ```
+<img width="586" height="275" alt="image" src="https://github.com/user-attachments/assets/842aa716-ed07-4e03-b1d3-e0c49ddc9331" />
 
-<img width="1722" height="790" alt="image" src="https://github.com/user-attachments/assets/c30e141f-9d30-46dc-993b-898092f3e00a" />
+
 
 
