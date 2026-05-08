@@ -110,7 +110,7 @@ docker compose logs -f
 Ahora nos quedará verificar que el funcionamiento sea correcto del servicio.
 
 <img width="595" height="198" alt="image" src="https://github.com/user-attachments/assets/5e5fea0f-df5a-48f1-a4f9-48fafdc59cbf" />
-
+<br>
 Como se puede ver podemos entrar lo que significa que funciona correctamente.
 
 ### 9. Configuración para que analice nuestras máquinas. 
@@ -118,7 +118,7 @@ Una vez sabemos que el servicio funciona correctamente, procederemos con la conf
 
 <img width="592" height="28" alt="image" src="https://github.com/user-attachments/assets/6188595d-0d76-4efd-800a-2774c98f3ab5" />
 
----
+<br>
 
 <img width="586" height="151" alt="image" src="https://github.com/user-attachments/assets/9cf07780-987b-4ef1-ab06-1ec482cdd14b" />
 
