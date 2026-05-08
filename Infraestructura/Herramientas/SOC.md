@@ -1,18 +1,24 @@
-# [cite_start]Implementación de un SOC con Wazuh y Docker 
+# Implementación de un SOC con Wazuh y Docker 
 
-## [cite_start]1. ¿Qué es un SOC? 
-[cite_start]Un **SOC (Security Operations Center)** es una unidad centralizada de la especialidad de ciberseguridad, la cual tiene la función de supervisar, detectar, analizar y responder a los incidentes sobre seguridad informática en tiempo real.
+## 1. ¿Qué es un SOC? 
+Un **SOC (Security Operations Center)** es una unidad centralizada de la especialidad de ciberseguridad, la cual tiene la función de supervisar, detectar, analizar y responder a los incidentes sobre seguridad informática en tiempo real.
 
-### [cite_start]¿Por qué implementar uno? 
-[cite_start]En este proyecto implementaremos un SOC para tener supervisados nuestros servidores sobre ataques informáticos y analizar el posible tráfico sospechoso en la red.
+### ¿Por qué vamos a implementar uno en nuestro proyecto? 
+En nuestro proyecto implementaremos un SOC debido a que nos servirá para tener supervisados nuestros servidores sobre ataques informáticos; aparte de esto, nos servirá para analizar el posible tráfico sospechoso en nuestros servidores.
 
 ---
 
-## [cite_start]2. Instalación de Docker 
+# Docker:
 
-### [cite_start]Paso 1: Preparar el sistema 
-[cite_start]Actualizamos las dependencias e instalamos los certificados necesarios para el funcionamiento del sistema:
+## Pasos para la instalación:  
+
+### 1. Preparar el terreno (instalar Docker)
+Lo primero que haremos será actualizar dependencias e instalar los certificados necesarios para que todo funcione correctamente.
 
 ```bash
+# Aquí van tus comandos
 sudo apt update
-sudo apt install -y ca-certificates curl gnupg lsb-release
+sudo apt install docker-ce
+
+# Aquí puedes poner una referencia a tu captura
+**[Imagen: Captura_del_terminal.png]**
