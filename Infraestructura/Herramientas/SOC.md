@@ -145,7 +145,6 @@ Por último, agruparemos las máquinas por grupos; en un lado tenemos el grupo d
 Una vez agrupadas las máquinas, modificaremos el código en cada grupo para que recolecte la información que queremos.
 
 <br>
-
 <img width="589" height="166" alt="image" src="https://github.com/user-attachments/assets/f05741d2-2204-489b-b37f-7a1665a2ce2f" />
 
 #### Visitantes:
