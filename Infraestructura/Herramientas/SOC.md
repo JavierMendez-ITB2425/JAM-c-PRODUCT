@@ -102,6 +102,8 @@ docker compose logs -f
 ```
 <img width="590" height="293" alt="image" src="https://github.com/user-attachments/assets/5d37f465-e98e-41de-be43-a0f4de98d394" />
 
+---
+
 <img width="587" height="293" alt="image" src="https://github.com/user-attachments/assets/c188a6bc-5ce9-46a8-aecc-956a37a729b5" />
 
 ### 8. Por último, verificaremos que todo funcione correctamente. 
@@ -116,7 +118,10 @@ Una vez sabemos que el servicio funciona correctamente, procederemos con la conf
 
 <img width="592" height="28" alt="image" src="https://github.com/user-attachments/assets/6188595d-0d76-4efd-800a-2774c98f3ab5" />
 
+---
+
 <img width="586" height="151" alt="image" src="https://github.com/user-attachments/assets/9cf07780-987b-4ef1-ab06-1ec482cdd14b" />
+
 
 Lo que hemos realizado en estas 2 capturas adjuntadas es entrar dentro del contenedor, instalar nano para posteriormente editar el archivo (/var/ossec/etc/ossec.conf).
 
