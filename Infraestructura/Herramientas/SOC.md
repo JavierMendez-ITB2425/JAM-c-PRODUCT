@@ -102,7 +102,7 @@ docker compose logs -f
 ```
 <img width="590" height="293" alt="image" src="https://github.com/user-attachments/assets/5d37f465-e98e-41de-be43-a0f4de98d394" />
 
----
+<br>
 
 <img width="587" height="293" alt="image" src="https://github.com/user-attachments/assets/c188a6bc-5ce9-46a8-aecc-956a37a729b5" />
 
