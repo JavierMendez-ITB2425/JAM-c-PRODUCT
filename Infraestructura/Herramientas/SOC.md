@@ -74,7 +74,7 @@ Comandos utilizados:
 sudo apt install git -y
 ```
 <img width="589" height="151" alt="image" src="https://github.com/user-attachments/assets/594c796f-a5b0-4dd6-982c-ecd51d245e25" />
-
+<br>
 Una vez instalado, tendremos que clonar el repositorio oficial de Wazuh y accederemos a él.
 
 ```bash
