@@ -165,5 +165,26 @@ Hoy seguiremos con varias tareas que tuvimos el anterior día asignadas; al fina
 **Proofhub:**
 <img width="1726" height="784" alt="image" src="https://github.com/user-attachments/assets/641e92dc-d230-47b7-a0d5-5eeff4217410" />
 
+**Fecha:** 08/05/2026
+
+## Resumen de la Jornada
+Hoy es el último día de la semana y tenemos el objetivo de completar todas las tareas pendientes que tienen que ver con el funcionamiento definitivo de las máquinas servidoras.
+
+---
+
+## Distribución de Tareas
+
+| Integrante | Responsabilidades |
+| :--- | :--- |
+| **Manuel** | Ayudará a Javier con el firewall y terminará de realizar el servidor de streaming y su documentación. |
+| **Aritz** | Realizará el sprint planning del día y terminará la implementación del SOC. |
+| **Javier** | Solucionará unos problemas de conectividad en nuestro firewall. |
+| **Cesc** | Terminará la implementación de la BD. |
+
+---
+**Proofhub:**
+<img width="1722" height="790" alt="image" src="https://github.com/user-attachments/assets/ab163f5a-f918-4b04-b854-2b693a71cdfd" />
+
+
 
 
