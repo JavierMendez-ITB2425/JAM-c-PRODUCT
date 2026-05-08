@@ -130,7 +130,7 @@ En este archivo modificaremos un apartado para permitir el acceso de Wazuh a las
 
 <img width="381" height="133" alt="image" src="https://github.com/user-attachments/assets/4ac9ae11-6a9c-40a2-8e46-991f2ad450af" />
 
----
+<br>
 
 <img width="587" height="278" alt="image" src="https://github.com/user-attachments/assets/7898b345-dad0-41e4-b6c2-c147db3e9d60" />
 
@@ -143,6 +143,7 @@ De las últimas acciones que realizaremos para que Wazuh pueda funcionar correct
 Por último, agruparemos las máquinas por grupos; en un lado tenemos el grupo de “Visitantes”, donde se encontrarán las máquinas de Nginx, web e iperf4, y en el otro lado el grupo “Gestión”, donde encontramos las máquinas icecast y el balanceador de carga.
 
 Una vez agrupadas las máquinas, modificaremos el código en cada grupo para que recolecte la información que queremos.
+<br>
 <img width="589" height="166" alt="image" src="https://github.com/user-attachments/assets/f05741d2-2204-489b-b37f-7a1665a2ce2f" />
 
 #### Visitantes:
