@@ -107,9 +107,9 @@ docker compose logs -f
 ### 8. Por último, verificaremos que todo funcione correctamente. 
 Ahora nos quedará verificar que el funcionamiento sea correcto del servicio.
 
-Funcionamiento correcto:
 <img width="595" height="198" alt="image" src="https://github.com/user-attachments/assets/5e5fea0f-df5a-48f1-a4f9-48fafdc59cbf" />
 
+Como se puede ver podemos entrar lo que significa que funciona correctamente.
 
 ### 9. Configuración para que analice nuestras máquinas. 
 Una vez sabemos que el servicio funciona correctamente, procederemos con la configuración para que analice todas nuestras máquinas.
@@ -138,10 +138,10 @@ Por último, agruparemos las máquinas por grupos; en un lado tenemos el grupo d
 Una vez agrupadas las máquinas, modificaremos el código en cada grupo para que recolecte la información que queremos.
 <img width="589" height="166" alt="image" src="https://github.com/user-attachments/assets/f05741d2-2204-489b-b37f-7a1665a2ce2f" />
 
-## Visitantes:
+#### Visitantes:
 <img width="592" height="391" alt="image" src="https://github.com/user-attachments/assets/ee6afb68-1d73-4880-a5fd-2543f8a3d521" />
 
-## Gestión:
+#### Gestión:
 <img width="590" height="399" alt="image" src="https://github.com/user-attachments/assets/d3a8521c-d3a1-4bf4-9342-d76adc3eeb2c" />
 
 
