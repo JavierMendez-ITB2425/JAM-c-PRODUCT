@@ -125,6 +125,7 @@ En este archivo modificaremos un apartado para permitir el acceso de Wazuh a las
 
 <img width="381" height="133" alt="image" src="https://github.com/user-attachments/assets/4ac9ae11-6a9c-40a2-8e46-991f2ad450af" />
 
+
 <img width="587" height="278" alt="image" src="https://github.com/user-attachments/assets/7898b345-dad0-41e4-b6c2-c147db3e9d60" />
 
 ### 10. Instalación de Wazuh en todas las máquinas:
