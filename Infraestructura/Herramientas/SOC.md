@@ -20,6 +20,8 @@ Lo primero que haremos será actualizar dependencias e instalar los certificados
 sudo apt update
 sudo apt install docker-ce
 
-# Aquí puedes poner una referencia a tu captura
-<img width="1722" height="790" alt="image" src="https://github.com/user-attachments/assets/bfd9e56e-e6bb-4dfb-9804-18cc28740698" />
+```
+
+<img width="1722" height="790" alt="image" src="https://github.com/user-attachments/assets/c30e141f-9d30-46dc-993b-898092f3e00a" />
+
 
