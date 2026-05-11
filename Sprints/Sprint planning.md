@@ -185,6 +185,26 @@ Hoy es el último día de la semana y tenemos el objetivo de completar todas las
 **Proofhub:**
 <img width="1722" height="790" alt="image" src="https://github.com/user-attachments/assets/ab163f5a-f918-4b04-b854-2b693a71cdfd" />
 
+**Fecha:** 11/05/2026
+
+## Resumen de la Jornada
+El día de hoy realizaremos un check de que todas las máquinas funcionen sin problemas y comenzaremos con la creación de la presentación que tendremos que entregar para la exposición, que en nuestro caso es este viernes.
+
+---
+
+## Distribución de Tareas
+
+| Integrante | Responsabilidades |
+| :--- | :--- |
+| **Manuel** | Revisará el funcionamiento de todas las máquinas. |
+| **Aritz** | Realiza el Sprint Planning del día y verificará que la máquina SOC funciona correctamente. |
+| **Javier** | Implementará el CAPTCHA. |
+| **Cesc** | Verificará que la implementación de la base de datos funciona correctamente y realizará la presentación. |
+
+---
+**Proofhub:**
+<img width="1719" height="775" alt="image" src="https://github.com/user-attachments/assets/49244cd0-9a2e-4a13-a724-94ea05a7b85b" />
+
 
 
 
