@@ -33,5 +33,5 @@ Para la interfaz de usuario de nuestro proyecto, utilizaremos el estándar de la
 * JavaScript aporta la lógica en el lado del cliente, permitiendo crear una experiencia dinámica e interactiva.
 La combinación de estas tecnologías nos asegura una total compatibilidad con los navegadores modernos y una gran flexibilidad para escalar el frontend según las necesidades del proyecto.
 
-Gestión de Base de Datos Relacional (MariaDB):
+## Gestión de Base de Datos Relacional (MariaDB):
 Como sistema de gestión de bases de datos (RDBMS), hemos seleccionado MariaDB. Decidimos implementar esta tecnología por ser una de las bases de datos de código abierto más robustas y populares, derivada de MySQL pero con mejoras en rendimiento y seguridad. En nuestro entorno de Docker, MariaDB nos permite gestionar la persistencia de los datos de manera eficiente, integrándose perfectamente con el resto de servicios y asegurando la integridad de la información de nuestro proyecto mediante un motor de almacenamiento rápido y confiable.
