@@ -65,6 +65,9 @@ echo "¡PROCESO COMPLETADO! Revisa tu Dashboard en 30 segundos."
 ```
 
 ## Uso
+```bash
+sudo chmod +x soc_reset.sh
+```
 
 ```bash
 sudo bash soc_reset.sh NOMBRE_NUEVO GRUPO
