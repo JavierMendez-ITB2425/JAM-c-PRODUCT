@@ -1,9 +1,6 @@
-```bash
-Comandos:
-sudo apt update
-sudo apt install docker-ce
-```
+# Script de Reseteo e Instalación Limpia de Wazuh Agent
 
+```bash
 #!/bin/bash
 
 # ================= CONFIGURACIÓN =================
@@ -65,3 +62,24 @@ sudo systemctl enable wazuh-agent
 sudo systemctl start wazuh-agent
 
 echo "¡PROCESO COMPLETADO! Revisa tu Dashboard en 30 segundos."
+```
+
+## Uso
+
+```bash
+sudo bash soc_reset.sh NOMBRE_NUEVO GRUPO
+```
+
+## Ejemplo
+
+```bash
+sudo bash soc_reset.sh servidor-web linux
+```
+
+## Qué hace este script
+
+1. Solicita un token a la API de Wazuh.
+2. Busca y elimina agentes antiguos con el mismo nombre.
+3. Borra completamente la instalación local del agente.
+4. Descarga e instala una copia limpia del agente Wazuh.
+5. Arranca y habilita el servicio automáticamente.
