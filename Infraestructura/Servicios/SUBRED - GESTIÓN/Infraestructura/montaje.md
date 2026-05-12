@@ -1,4 +1,4 @@
-# Guía de Instalación del Sistema de Streaming — Palau Sant Jordi
+# Instalación del Sistema de Streaming 
  
 ## Índice
  
