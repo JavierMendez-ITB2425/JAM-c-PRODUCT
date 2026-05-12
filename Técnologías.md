@@ -35,3 +35,17 @@ La combinación de estas tecnologías nos asegura una total compatibilidad con l
 
 ## Gestión de Base de Datos Relacional (MariaDB):
 Como sistema de gestión de bases de datos (RDBMS), hemos seleccionado MariaDB. Decidimos implementar esta tecnología por ser una de las bases de datos de código abierto más robustas y populares, derivada de MySQL pero con mejoras en rendimiento y seguridad. En nuestro entorno de Docker, MariaDB nos permite gestionar la persistencia de los datos de manera eficiente, integrándose perfectamente con el resto de servicios y asegurando la integridad de la información de nuestro proyecto mediante un motor de almacenamiento rápido y confiable.
+
+## Multimedia y Streaming (RTMP y HLS):
+Para la gestión de contenido audiovisual en tiempo real, hemos optado por una arquitectura de streaming híbrida que combina dos protocolos fundamentales:
+
+* RTMP (Real-Time Messaging Protocol): Utilizaremos este protocolo para la fase de contribución o ingesta. Su baja latencia nos permite recibir la señal de vídeo y audio desde la fuente emisora hacia nuestro servidor con un retardo mínimo, asegurando una transmisión estable y profesional.
+
+* HLS (HTTP Live Streaming): Dado que RTMP no es compatible con los navegadores modernos, implementaremos un servidor que transcodifique la señal a HLS. Este protocolo fragmenta el vídeo en pequeños segmentos servidos a través de HTTP, lo que garantiza que cualquier usuario pueda visualizar el streaming desde cualquier dispositivo (móvil, tablet o PC) y se adapte automáticamente a su ancho de banda, evitando cortes en la reproducción.
+
+## Organización y Documentación (ProofHub y GitHub):
+La gestión del flujo de trabajo y el control del conocimiento son pilares críticos en nuestro proyecto, por lo que hemos integrado dos plataformas complementarias:
+
+* ProofHub: Esta herramienta es nuestra central de operaciones para la gestión de proyectos. La implementamos para planificar hitos, asignar tareas específicas a cada miembro del equipo y centralizar la comunicación. Su uso nos permite tener una visión global del progreso del proyecto, gestionar los tiempos de entrega y asegurar que todos los recursos estén alineados con los objetivos marcados.
+
+* GitHub: Para el desarrollo técnico y la persistencia del conocimiento, utilizamos GitHub. No solo actúa como nuestro sistema de control de versiones (Git), permitiendo la colaboración simultánea en el código fuente, sino que también sirve como el repositorio central de nuestra documentación técnica. Mediante el uso de su sistema de archivos y wikis, garantizamos que toda la configuración de la infraestructura y el manual de despliegue estén versionados, protegidos y accesibles para futuras consultas o auditorías.
