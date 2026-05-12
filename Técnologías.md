@@ -26,11 +26,11 @@ Como capa de seguridad adicional a nivel de kernel, utilizaremos iptables para g
 Desarrollo Frontend (HTML5, CSS3 y JavaScript):
 Para la interfaz de usuario de nuestro proyecto, utilizaremos el estándar de la web: HTML, CSS y JavaScript.
 
-HTML5 nos permite estructurar el contenido de la web de forma semántica.
+* HTML5 nos permite estructurar el contenido de la web de forma semántica.
 
-CSS3 se encarga del diseño visual y la adaptabilidad (Responsive Design) para que la plataforma sea accesible desde cualquier dispositivo.
+* CSS3 se encarga del diseño visual y la adaptabilidad (Responsive Design) para que la plataforma sea accesible desde cualquier dispositivo.
 
-JavaScript aporta la lógica en el lado del cliente, permitiendo crear una experiencia dinámica e interactiva.
+* JavaScript aporta la lógica en el lado del cliente, permitiendo crear una experiencia dinámica e interactiva.
 La combinación de estas tecnologías nos asegura una total compatibilidad con los navegadores modernos y una gran flexibilidad para escalar el frontend según las necesidades del proyecto.
 
 Gestión de Base de Datos Relacional (MariaDB):
