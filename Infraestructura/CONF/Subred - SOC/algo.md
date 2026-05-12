@@ -6,7 +6,7 @@
 # ================= CONFIGURACIÓN =================
 MANAGER_IP="10.0.6.148"
 API_USER="admin"          # Usuario por defecto de Wazuh
-API_PASS="admin"          # CAMBIA ESTO por tu contraseña del Dashboard
+API_PASS="admin"          # Poner la contraseña del Dashboard
 # =================================================
 
 AGENT_NAME=$1
