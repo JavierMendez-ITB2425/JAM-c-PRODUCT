@@ -1,4 +1,4 @@
-# Configuración de Infraestructura — Máquina DMZ y BBDD
+# Configuración de Infraestructura — Máquina DMZ
  
 ---
  

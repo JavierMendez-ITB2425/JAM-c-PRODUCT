@@ -1,5 +1,5 @@
 # Infraestructura de Red AWS 
- 
+ ![Xarxa NAT Viabilitat Flow-2026-05-12-210333.png](..%2FXarxa%20NAT%20Viabilitat%20Flow-2026-05-12-210333.png)
 ## Índice
  
 1. [La VPC — El Contenedor de Todo](#1-la-vpc--el-contenedor-de-todo)

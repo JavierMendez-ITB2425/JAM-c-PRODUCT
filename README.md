@@ -1,4 +1,31 @@
 # Índice del Proyecto — Infraestructura Tecnológica para Recintos de Gran Aforo
+![Xarxa NAT Viabilitat Flow-2026-05-12-210333.png](Xarxa%20NAT%20Viabilitat%20Flow-2026-05-12-210333.png)
+
+## 🗂️ Índice de Contenidos
+
+En cada enlace, encontraras los archivos de configuración o pasos a seguir según la subred que le interese saber. ej: si quiere saber el nginx.conf de la web, vaya a CONF y subred - DMZ.
+### 📑 1. Documentación
+* [Admin](Documentaci%C3%B3n%2FAdmin)
+* [Cliente](Documentaci%C3%B3n%2FCliente)
+
+### 🏗️ 2. Infraestructura
+* **Configuraciones **
+  * [Firewall](Infraestructura%2FCONF%2FFirewall)
+  * [subred - DMZ](Infraestructura%2FCONF%2Fsubred%20-%20DMZ)
+  * [Subred - Gestión](Infraestructura%2FCONF%2FSubred%20-%20Gesti%C3%B3n)
+  * [Subred - SOC](Infraestructura%2FCONF%2FSubred%20-%20SOC)
+  * [Subred - Visitantes](Infraestructura%2FCONF%2FSubred%20-%20Visitantes)
+  * [Terraform](Infraestructura%2FCONF%2FTerraform)
+* **Servicios Activos**
+  * [Firewall](Infraestructura%2FServicios%2FFirewall)
+  * [SUBRED - DMZ](Infraestructura%2FServicios%2FSUBRED%20-%20DMZ)
+  * [SUBRED - GESTIÓN](Infraestructura%2FServicios%2FSUBRED%20-%20GESTI%C3%93N)
+  * [SUBRED - SOC](Infraestructura%2FServicios%2FSUBRED%20-%20SOC)
+  * [SUBRED - VISITANTES](Infraestructura%2FServicios%2FSUBRED%20-%20VISITANTES)
+
+### 🚀 3. Sprints
+* [Sprints](Sprints)
+
 
 ## Tabla de Contenidos
 
@@ -20,7 +47,7 @@
 
 Inspirados en los recientes despliegues tecnológicos de recintos masivos, este proyecto plantea el diseño, despliegue y fortificación de la infraestructura necesaria para dar soporte al **anillo WiFi** y los **servicios de streaming interno** de un recinto de gran aforo (simulando el *Palau Sant Jordi*).
 
-El objetivo principal es demostrar la convergencia de cuatro disciplinas clave del ciclo **ASIR**:
+El objetivo principal es demostrar la convergencia de cuatro disciplinas clave del ciclo:
 
 - **Redes y Enrutamiento:** Diseño de topología en la nube y control de acceso perimetral.
 - **Sistemas y Alta Disponibilidad:** Contenedorización de servicios y balanceo de carga.
@@ -37,7 +64,7 @@ El entorno físico se emulará utilizando **Amazon Web Services (AWS)** bajo la 
 - **Subred Pública (`10.0.1.0/24`):** Conectada a un Internet Gateway (IGW). Aquí residirá la interfaz WAN del firewall perimetral.
 - **Subred Privada de Servicios (`10.0.2.0/24`):** Aislada de internet directamente. Aloja los servidores de streaming y el balanceador de carga (salida a internet vía NAT).
 - **Subred de Gestión / SOC (`10.0.3.0/24`):** Red aislada para herramientas de monitorización y el SIEM.
-
+- **Subred DMZ (`10.0.5.0/24`):** Red expuesta a internet, segunda red con ip elastica la cual aloja nuestra pagina web.
 ---
 
 ## 3. Desglose Técnico de los Nodos
@@ -46,9 +73,9 @@ El proyecto consta de **5 instancias EC2** (tipo t2.micro/t3.micro Linux) y serv
 
 ### Nodo 1: Firewall Perimetral y Control de Acceso
 
-- **Tecnología:** pfSense (AMI nativa o sobre FreeBSD).
+- **Tecnología:** iptables
 - **Rol:** NAT Gateway e inspección de tráfico.
-- **Portal Cautivo:** Configurado en la interfaz LAN para simular el WiFi del estadio (*"Palau_Guest_WiFi"*). Obligará a la aceptación de términos antes de permitir el acceso a la red de servicios.
+- **Portal Cautivo:** Configurado en la interfaz LAN para simular el WiFi del estadio. Obligará a la aceptación de términos antes de permitir el acceso a la red de servicios.
 
 ### Nodo 2: Balanceador de Carga / Reverse Proxy
 
@@ -65,8 +92,7 @@ El proyecto consta de **5 instancias EC2** (tipo t2.micro/t3.micro Linux) y serv
 Contiene el stack de seguridad y monitorización en contenedores:
 
 1. **Wazuh Manager (SIEM):** Centralización de logs y telemetría de todos los nodos.
-2. **Prometheus & Grafana:** Extracción de métricas (CPU, peticiones concurrentes) y renderizado en dashboards en tiempo real.
-3. **Honeypot Cowrie:** Simulación de servicio SSH (puerto 22) para registrar ataques de fuerza bruta.
+2. **Honeypot Cowrie:** Simulación de servicio SSH (puerto 22) para registrar ataques de fuerza bruta.
 
 ---
 
@@ -78,10 +104,8 @@ Se automatiza la seguridad mediante un flujo de **Active Response** entre Wazuh 
 2. **Recolección:** El agente local envía los logs JSON al **Wazuh Manager**.
 3. **Correlación:** El SIEM detecta una intrusión crítica (Nivel 10+).
 4. **Respuesta Activa:** Wazuh ejecuta un script que se comunica vía API/SSH con el **pfSense**.
-5. **Mitigación:** pfSense añade la IP a una tabla de bloqueo (`DROP`), expulsando al atacante instantáneamente.
 
 ---
-
 ## 5. Pruebas de Carga y Simulación
 
 Para validar el sistema, se ejecutarán dos vectores simultáneos:
