@@ -1,153 +1,73 @@
 # Flujo de Entrega HLS — Subred Visitantes
  
-Esta sección documenta el recorrido completo de una petición
-de streaming desde que el dispositivo de un visitante solicita
-el vídeo hasta que recibe el primer fragmento reproducible.
-Entender este flujo es clave para diagnosticar cualquier
-problema de rendimiento o conectividad en el servicio.
+Documentación del recorrido que sigue una petición de red desde que un dispositivo conectado al WiFi público intenta reproducir el evento en directo, hasta que el fragmento de vídeo llega desde el backend.
  
 ---
  
-## El Punto de Partida — El Reproductor en el Navegador
+## 1. Petición del cliente
  
-Cuando un visitante abre el portal desde
-su móvil o portátil, el navegador carga una página HTML que
-incluye el reproductor Video.js configurado para HLS.
+El reproductor **Video.js**, embebido en el portal HTML, consume el streaming mediante **HLS (HTTP Live Streaming)**.
  
-La primera petición que hace el reproductor es siempre al
-fichero de índice del stream:
+### Por qué Video.js y no el reproductor nativo del navegador
  
-```
-GET /hls/stream.m3u8
-```
+El protocolo HLS no tiene soporte nativo en la mayoría de navegadores de escritorio (Chrome, Firefox, Edge), a diferencia de un archivo `.mp4` convencional. Video.js actúa como motor intermedio: lee el formato HLS, descarga los fragmentos de vídeo y los inyecta al reproductor nativo del navegador en tiempo real.
  
-Al ser una ruta relativa, la petición va dirigida al mismo
-servidor que sirvió la página — el portal Nginx en la subnet
-de Visitantes. El visitante no sabe, ni necesita saber, que
-el vídeo viene de otra subnet completamente diferente.
+### La ruta relativa: la decisión de diseño más relevante del frontend
  
----
+La petición se lanza como un `GET` a la ruta relativa `/hls/stream.m3u8`. Esta es la línea más importante del frontend, y merece una explicación detenida.
  
-## Primera Parada — Nginx en la Subnet de Visitantes
+Usar una ruta relativa en lugar de una IP absoluta (como `http://10.0.4.242/hls/...`) hace que el navegador del visitante dirija la petición al mismo servidor que le sirvió la página: el Nginx de la subred de visitantes. Esto tiene dos consecuencias directas para la arquitectura:
  
-El portal Nginx recibe la petición y hace dos cosas antes
-de reenviarla al backend.
+- **Oculta la topología interna** — el visitante nunca llega a ver las IPs de la subred de gestión (`10.0.4.0/24`).
+- **Fuerza el uso del proxy inverso** — el cliente le pide el vídeo al Nginx de visitantes, que es el que hace el salto hacia HAProxy a través de la regla `location /hls/ { proxy_pass ... }` configurada en backend.
+### El tipo MIME `application/x-mpegURL`
  
-La primera es comprobar que el visitante ha pasado por el
-portal cautivo y ha aceptado los términos de uso de la red
-WiFi. Una petición que llegue sin esa validación no continúa.
- 
-La segunda es actuar como proxy inverso — reenvía la petición
-hacia el balanceador en la subnet de Gestión (10.0.4.242).
-Para el visitante, todo ocurre de forma transparente: su
-navegador habla con Nginx y Nginx habla con el backend.
- 
-La directiva que marca la diferencia aquí es `proxy_buffering off`.
-Sin ella, Nginx descargaría cada fragmento de vídeo completo
-antes de empezar a enviarlo al cliente. En un stream en vivo
-con fragmentos que se regeneran cada tres segundos, ese buffer
-añade latencia acumulada que acaba degradando la experiencia
-hasta hacerla inutilizable. Con `proxy_buffering off`, los
-bytes del fragmento viajan directamente del backend al navegador
-conforme llegan, sin escalas intermedias.
+El atributo `type="application/x-mpegURL"` le indica a Video.js que lo que recibirá en esa ruta no es un vídeo, sino un archivo de texto: el manifiesto `stream.m3u8`. Con esa información, el reproductor sabe que debe abrir ese archivo, identificar qué fragmentos `.ts` están disponibles (los que residen en el `tmpfs` de los nodos HLS), descargarlos secuencialmente y quedarse a la escucha de actualizaciones del manifiesto para mantener el falso directo generado por FFmpeg.
  
 ---
  
-## Segunda Parada — El Firewall
+## 2. Proxy inverso en la subred de visitantes (`10.0.3.0/24`)
  
-El tráfico entre la subnet de Visitantes (10.0.3.0/24) y la
-subnet de Gestión (10.0.4.0/24) no tiene un camino directo.
-Toda comunicación entre subredes pasa por la instancia Ubuntu
-que actúa como router NAT y firewall perimetral.
+Tanto la playlist (`.m3u8`) como los fragmentos de vídeo (`.ts`) aterrizan en la instancia **Nginx** (`t2.micro`) desplegada en la red de visitantes.
  
-Cuando el paquete llega al firewall, iptables evalúa si puede
-continuar. La cadena FORWARD tiene política por defecto DROP,
-lo que significa que cualquier tráfico que no esté explícitamente
-autorizado se descarta sin respuesta.
+Nginx tiene dos responsabilidades aquí:
  
-Para el streaming existe una regla concreta que permite el paso:
- 
-```
-origen 10.0.3.0/24 → destino 10.0.4.0/24, puertos 80 y 8000: ACCEPT
-```
- 
-El tráfico de Visitantes hacia SOC (10.0.6.0/24), en cambio,
-tiene su propia regla DROP. Un visitante no puede alcanzar
-el SOC aunque lo intente — el paquete desaparece en el firewall
-sin dejar rastro en el destino, aunque sí en los logs del
-propio firewall, donde Wazuh puede detectar el intento.
+- **Validar el portal cautivo** — comprueba que el visitante haya aceptado los términos de uso antes de dejarle pasar.
+- **Reenviar la petición** — actúa como proxy inverso hacia la IP correspondiente en la subred de gestión.
+Un detalle importante: el reenvío se hace con `proxy_buffering off`. Para streaming en vivo esto no es opcional; sin esa directiva, Nginx acumularía fragmentos en disco antes de enviarlos, introduciendo latencia innecesaria. Con ella desactivada, los paquetes fluyen directamente hacia el cliente según llegan del backend.
  
 ---
  
-## Tercera Parada — HAProxy en el Balanceador
+## 3. Tránsito por el firewall perimetral
  
-La petición llega al balanceador (10.0.4.242), donde HAProxy
-escucha en el puerto 80 y decide a qué nodo HLS enviarla.
+El tráfico entre visitantes y gestión no tiene un camino directo: debe pasar por la instancia Ubuntu que hace de **router NAT y firewall**.
  
-El algoritmo configurado es `leastconn`. A diferencia de
-round-robin, que reparte peticiones de forma ciega y alternada,
-`leastconn` consulta cuántas conexiones activas tiene cada nodo
-en ese momento y envía la nueva petición al que tenga menos.
-Para HLS esto importa: los fragmentos de vídeo no siempre tardan
-lo mismo en transferirse, y un nodo que acumula varias
-transferencias lentas simultáneas puede convertirse en un cuello
-de botella si el balanceador sigue mandándole peticiones sin
-mirar su carga real.
+La política por defecto en la cadena `FORWARD` es `DROP`, pero existe una regla explícita que autoriza el flujo desde `10.0.3.0/24` hacia `10.0.4.0/24` en los puertos 80 y 8000.
  
-Antes de enviar visitantes a un nodo, HAProxy verifica que
-el stream esté realmente activo. Cada dos segundos hace una
-petición al fichero `stream.m3u8` de cada nodo. Si el fichero
-no responde o devuelve error, HAProxy saca ese nodo del pool
-de forma automática y redirige todo el tráfico al que sigue
-funcionando. En cuanto el nodo se recupera, vuelve a entrar
-en rotación sin intervención manual.
+Lo relevante en términos de seguridad: este diseño garantiza que ninguna petición originada en la subred de visitantes pueda llegar a la **subred SOC** (`10.0.6.0/24`). La segmentación no es solo una capa de red, sino un requisito de seguridad del recinto.
  
 ---
  
-## Destino Final — Los Nodos HLS
+## 4. Balanceo de carga (`10.0.4.242`)
  
-La petición llega a uno de los dos nodos de streaming
-(10.0.4.195 o 10.0.4.166), donde corre nginx-rtmp dentro
-de un contenedor Docker.
+La petición llega a **HAProxy**, que se encarga de distribuirla entre los nodos de streaming disponibles.
  
-Lo primero que hace nginx-rtmp es buscar el fichero solicitado
-en `/tmp/hls`. Esta ruta no corresponde al disco de la instancia
-sino a un sistema de ficheros montado en la memoria RAM de
-la máquina mediante `tmpfs`. Los 300MB de RAM reservados para
-este propósito alojan los fragmentos `.ts` y el índice `.m3u8`
-que nginx-rtmp va generando y reemplazando continuamente a
-medida que FFmpeg le envía el stream.
+El algoritmo configurado es `leastconn`: en lugar de repartir peticiones en round-robin, HAProxy consulta cuántas conexiones activas tiene cada nodo y envía la nueva al menos cargado. Esto resulta especialmente útil con fragmentos HLS, cuya duración de descarga puede variar según el tamaño del segmento y las condiciones de red.
  
-La razón de usar RAM en lugar de disco es una cuestión de
-velocidad de escritura y número de operaciones. Cada tres
-segundos el nodo crea un fragmento nuevo, actualiza el índice
-y elimina el fragmento más antiguo. A lo largo de una sesión
-de streaming de varias horas, el número de operaciones de
-escritura sobre el mismo espacio de almacenamiento es enorme.
-En disco, esas operaciones generan latencia e I/O que en una
-instancia de tamaño limitado acaban afectando al rendimiento
-general. En RAM, la operación es instantánea.
+HAProxy también realiza *health checks* activos: solo considera disponible un nodo si `stream.m3u8` responde correctamente. Si el streaming del evento se interrumpe en un nodo, ese nodo sale de rotación de forma automática.
  
 ---
  
-## El Viaje de Vuelta
+## 5. Entrega desde RAM (`10.0.4.195` / `10.0.4.166`)
  
-Una vez el nodo tiene el fragmento listo, la respuesta recorre
-el mismo camino en sentido inverso:
+El fragmento es finalmente servido por uno de los dos nodos HLS, cada uno ejecutando **nginx-rtmp dentro de un contenedor Docker**.
+ 
+El punto clave de este nivel es que los archivos no se leen desde disco. El nodo monta un volumen `tmpfs` de 300 MB en memoria RAM, y es desde ahí desde donde sirve tanto los `.m3u8` como los `.ts`. El objetivo es eliminar cualquier cuello de botella de I/O de disco en escenarios de alta concurrencia, como las pruebas de carga masiva realizadas con iPerf3.
+ 
+La respuesta recorre la ruta inversa:
  
 ```
-Nodo HLS
-   → HAProxy (confirma el estado de la conexión)
-      → Firewall (el tráfico de vuelta está autorizado
-                  por la regla ESTABLISHED/RELATED)
-         → Nginx Visitantes (reenvía al cliente sin buffer)
-            → Navegador del visitante
+Nodo HLS → HAProxy → Firewall → Nginx Visitantes → Navegador
 ```
  
-El reproductor Video.js ensambla los fragmentos en el orden
-indicado por el fichero `.m3u8` y los reproduce de forma
-continua. Mientras el visitante ve los primeros segundos,
-el reproductor está descargando en segundo plano los
-fragmentos siguientes para mantener el buffer lleno y evitar
-interrupciones ante cualquier variación puntual en la red.
- 
+Video.js recibe los fragmentos en orden y ensambla el flujo en tiempo real.
