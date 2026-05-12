@@ -712,3 +712,79 @@ contenedor RTMP sin recodificar. El consumo de CPU cae del
 ---
  
 ## 8. Verificación Final
+Tras completar todas las fases y aplicar las correcciones,
+verificar el sistema de extremo a extremo.
+ 
+### 8.1 Verificar que los nodos reciben el stream
+ 
+Desde cualquier máquina dentro de la VPC:
+ 
+```bash
+# Verificar HLS1
+curl http://10.0.4.195/stream.m3u8
+ 
+# Verificar HLS2
+curl http://10.0.4.166/stream.m3u8
+```
+ 
+Ambos deben devolver el índice del stream con un formato similar a:
+ 
+```
+#EXTM3U
+#EXT-X-VERSION:3
+#EXT-X-TARGETDURATION:3
+#EXTINF:3.000,
+stream-0.ts
+#EXTINF:3.000,
+stream-1.ts
+#EXTINF:3.000,
+stream-2.ts
+```
+ 
+Si alguno devuelve error 404, ese nodo no está recibiendo
+el stream de FFmpeg.
+ 
+### 8.2 Verificar el balanceador
+ 
+```bash
+curl http://10.0.4.242/stream.m3u8
+```
+ 
+Debe devolver el mismo resultado que los nodos. Si falla,
+verificar que HAProxy está corriendo:
+ 
+```bash
+sudo docker ps
+```
+ 
+### 8.3 Verificar el proxy de Visitantes
+ 
+Desde la máquina del portal de Visitantes:
+ 
+```bash
+curl http://localhost/hls/stream.m3u8
+```
+ 
+Debe devolver el índice del stream. Si falla verificar que
+Nginx está activo:
+ 
+```bash
+sudo systemctl status nginx
+```
+ 
+### 8.4 Verificar el reproductor en el navegador
+ 
+Desde un dispositivo en la subnet de Visitantes, abrir el
+navegador y acceder a la IP del portal. El reproductor debe
+arrancar y mostrar el vídeo en menos de 5 segundos.
+ 
+### 8.5 Diagnóstico rápido de problemas
+ 
+| Síntoma | Causa probable | Solución |
+|---|---|---|
+| `.m3u8` vacío en los nodos | FFmpeg no está corriendo | Relanzar FFmpeg |
+| `.m3u8` vacío solo en un nodo | Un destino RTMP en FFmpeg falla | Verificar conectividad al nodo |
+| HAProxy devuelve 503 | Ambos nodos sin stream | Relanzar FFmpeg |
+| Vídeo no arranca en el navegador | HLS.js no puede descargar el `.m3u8` | Verificar proxy en Visitantes |
+| Cortes frecuentes durante reproducción | CPU al límite en FFmpeg | Verificar que se usa `-c:v copy` |
+| Vídeo con retraso creciente | Caché activa en el proxy | Verificar `proxy_buffering off` |
