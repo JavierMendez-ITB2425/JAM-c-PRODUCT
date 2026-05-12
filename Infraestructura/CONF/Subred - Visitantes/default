@@ -1,0 +1,32 @@
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    root /var/www/html;
+    index index.html;
+    server_name _;
+
+    server_tokens off;
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-XSS-Protection "1; mode=block" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    client_max_body_size 1M;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+    location /hls/ {
+        proxy_pass http://10.0.4.242/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+
+        # Sin caché — HLS necesita los fragmentos frescos siempre
+        proxy_buffering off;
+        add_header Cache-Control no-cache;
+        add_header Access-Control-Allow-Origin *;
+
+        # Timeouts cortos — si un nodo no responde en 3s, HAProxy ya habrá cambiado
+        proxy_connect_timeout 3s;
+        proxy_read_timeout 10s;
+    }
+}

@@ -37,6 +37,14 @@ resource "aws_subnet" "soc" {
   tags              = { Name = "Subnet-SOC" }
 }
 
+# ── NUEVO — Subnet DMZ ────────────────────────────────────
+resource "aws_subnet" "dmz" {
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = "10.0.5.0/24"
+  availability_zone = "us-east-1a"
+  tags              = { Name = "Subnet-DMZ" }
+}
+
 # Subnet pública del firewall sale por IGW
 resource "aws_route_table" "rt_public" {
   vpc_id = aws_vpc.main.id
@@ -52,7 +60,7 @@ resource "aws_route_table_association" "assoc_public" {
   route_table_id = aws_route_table.rt_public.id
 }
 
-# Las 3 subredes privadas apuntan a la ENI del firewall
+# Las subredes privadas apuntan a la ENI del firewall
 resource "aws_route_table" "rt_visitantes" {
   vpc_id = aws_vpc.main.id
   route {
@@ -93,4 +101,21 @@ resource "aws_route_table" "rt_soc" {
 resource "aws_route_table_association" "assoc_soc" {
   subnet_id      = aws_subnet.soc.id
   route_table_id = aws_route_table.rt_soc.id
-} 
+}
+
+# ── NUEVO — DMZ sale directamente por IGW ─────────────────
+# No pasa por el firewall — acceso directo desde internet
+# Esto es lo que la diferencia del resto de subredes
+resource "aws_route_table" "rt_dmz" {
+  vpc_id = aws_vpc.main.id
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.igw.id
+  }
+  tags = { Name = "RT-DMZ" }
+}
+
+resource "aws_route_table_association" "assoc_dmz" {
+  subnet_id      = aws_subnet.dmz.id
+  route_table_id = aws_route_table.rt_dmz.id
+}

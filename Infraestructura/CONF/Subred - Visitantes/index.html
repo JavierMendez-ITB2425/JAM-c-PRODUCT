@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Event Stream Portal</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- FontAwesome para iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Video.js CSS -->
+    <link href="https://vjs.zencdn.net/8.3.0/video-js.css" rel="stylesheet" />
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,600;0,800;1,400;1,800&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+
+        /* Custom scrollbar para el chat */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 10px; }
+
+        /* Animación para nuevos mensajes */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in { animation: fadeIn 0.3s ease-out forwards; }
+
+        /* Hacer responsivo el contenedor de Video.js sin alterar el HTML pedido */
+        .video-js {
+            width: 100% !important;
+            height: 100% !important;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-[#050505] text-white selection:bg-amber-500/30 overflow-hidden text-sm md:text-base">
+
+    <!-- Background Atmosphere -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
+        <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-amber-600/10 blur-[120px] animate-pulse"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-purple-600/10 blur-[150px] animate-pulse"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="relative z-20 border-b border-white/5 bg-black/60 backdrop-blur-md px-6 py-4 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-amber-500 rounded-lg flex items-center justify-center shadow-[0_0_15px_rgba(245,158,11,0.4)]">
+                <i class="fas fa-trophy text-black text-xl"></i>
+            </div>
+            <span class="font-bold text-xl tracking-tighter uppercase italic">LivePulse</span>
+        </div>
+        <div class="hidden md:flex items-center gap-8 text-sm font-medium uppercase tracking-widest text-white/60">
+            <a href="#" class="text-white hover:text-amber-400 transition-colors">Stadium</a>
+            <a href="#" class="hover:text-amber-400 transition-colors">Concerts</a>
+            <a href="#" class="hover:text-amber-400 transition-colors">Schedule</a>
+            <a href="#" class="hover:text-amber-400 transition-colors">VIP</a>
+        </div>
+        <button class="px-5 py-2 bg-white text-black text-xs font-bold uppercase tracking-wider rounded transition-all hover:bg-amber-400 active:scale-95 shadow-[0_0_20px_rgba(255,255,255,0.1)]">
+            Ticket Holder
+        </button>
+    </nav>
+
+    <main class="relative z-10 flex flex-col lg:flex-row h-[calc(100vh-73px)]">
+        <!-- Stream Content -->
+        <div class="flex-1 overflow-y-auto p-4 md:p-8 flex flex-col gap-6">
+
+            <!-- Video Player Container -->
+            <div class="relative group rounded-xl overflow-hidden border border-white/10 shadow-2xl bg-black aspect-video max-w-5xl mx-auto w-full flex items-center justify-center">
+
+                <!-- BLOQUE DE VIDEO.JS EXACTO SOLICITADO -->
+                <video id="mi-reproductor" class="video-js vjs-big-play-centered vjs-theme-city" controls preload="auto" width="854" height="480" data-setup="{}">
+                    <source src="/hls/stream.m3u8" type="application/x-mpegURL" />
+                </video>
+                <!-- FIN DEL BLOQUE EXACTO -->
+
+                <!-- Live Badge Overlay -->
+                <div class="absolute top-4 left-4 z-10 flex items-center gap-2 pointer-events-none">
+                    <span class="px-2 py-1 bg-red-600 text-[10px] font-bold rounded uppercase flex items-center gap-1.5 shadow-lg">
+                        <span class="w-1.5 h-1.5 bg-white rounded-full animate-ping"></span>
+                        Live
+                    </span>
+                    <span class="px-2 py-1 bg-black/50 backdrop-blur-md text-[10px] font-bold rounded uppercase flex items-center gap-1.5 border border-white/10">
+                        <i class="fas fa-eye text-[10px]"></i>
+                        <span id="view-count">128,402</span>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Event Details -->
+            <div class="max-w-5xl mx-auto w-full flex flex-col gap-6 pb-12">
+                <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                    <div class="space-y-1">
+                        <div class="flex items-center gap-2 text-amber-500 text-xs font-semibold uppercase tracking-widest">
+                            <i class="fas fa-music"></i> Live Stadium Experience
+                        </div>
+                        <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight italic uppercase leading-none">
+                            World Championship: Final Clash
+                        </h1>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button id="like-btn" class="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
+                            <i class="fas fa-heart"></i>
+                            <span id="like-count" class="text-sm font-medium">4520</span>
+                        </button>
+                        <button class="p-2.5 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
+                            <i class="fas fa-share-nodes"></i>
+                        </button>
+                        <button class="p-2.5 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
+                            <i class="fas fa-circle-info"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <p class="text-white/60 text-lg leading-relaxed max-w-3xl">
+                    Witness the ultimate showdown between the titans of the arena. Live and exclusive.
+                </p>
+
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 pt-6 mt-6 border-t border-white/5">
+                    <div class="flex flex-col gap-1">
+                        <span class="text-[10px] uppercase tracking-widest text-white/40 font-bold">Date</span>
+                        <span class="text-sm font-medium">May 15, 2026</span>
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <span class="text-[10px] uppercase tracking-widest text-white/40 font-bold">Location</span>
+                        <span class="text-sm font-medium">Aura Stadium, London</span>
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <span class="text-[10px] uppercase tracking-widest text-white/40 font-bold">Duration</span>
+                        <span class="text-sm font-medium">Est. 3 Hours</span>
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <span class="text-[10px] uppercase tracking-widest text-white/40 font-bold">Quality</span>
+                        <span class="text-sm font-medium">4K HDR Dolby Vision</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Sidebar -->
+        <aside id="chat-sidebar" class="w-full lg:w-96 border-l border-white/5 bg-black/40 backdrop-blur-xl flex flex-col h-full hidden lg:flex">
+            <div class="p-4 border-b border-white/5 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <i class="fas fa-comment-dots text-amber-500"></i>
+                    <span class="text-xs font-bold uppercase tracking-widest">Live Integration</span>
+                </div>
+                <div class="flex items-center gap-4">
+                    <span class="flex items-center gap-1.5 text-[10px] text-green-500 font-bold uppercase">
+                        <i class="fas fa-users"></i> Connect
+                    </span>
+                </div>
+            </div>
+
+            <div id="chat-messages" class="flex-1 overflow-y-auto p-4 space-y-4">
+                <div class="text-sm space-y-0.5 group">
+                    <span class="font-bold text-blue-400 mr-2">Alex88</span>
+                    <span class="text-white/80 leading-snug">LFG!!! Ready for this!</span>
+                </div>
+                <div class="text-sm space-y-0.5 group">
+                    <span class="font-bold text-purple-400 mr-2">Sarah_Stream</span>
+                    <span class="text-white/80 leading-snug">The production quality is insane already.</span>
+                </div>
+                <div class="text-sm space-y-0.5 group">
+                    <span class="font-bold text-green-400 mr-2">Nitro</span>
+                    <span class="text-white/80 leading-snug">Who are you guys voting for? 🏆</span>
+                </div>
+                <div class="text-sm space-y-0.5 group">
+                    <span class="font-bold text-red-400 mr-2">ProGamer</span>
+                    <span class="text-white/80 leading-snug">Don't miss the 2nd half, something big is coming.</span>
+                </div>
+            </div>
+
+            <div class="p-4 pb-8 lg:pb-4 border-t border-white/5">
+                <form id="chat-form" class="relative">
+                    <input id="chat-input" type="text" placeholder="Say something nice..." class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-amber-500/50 transition-colors" autocomplete="off" />
+                    <button type="submit" class="absolute right-2 top-1/2 -translate-y-[50%] p-1.5 bg-amber-500 text-black rounded hover:bg-amber-400 transition-colors">
+                        <i class="fas fa-paper-plane px-1"></i>
+                    </button>
+                </form>
+                <div class="mt-4 flex items-center justify-center gap-6 opacity-40 grayscale">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Twitch_logo.svg" class="h-4" alt="Twitch" />
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg" class="h-3" alt="YouTube" />
+                </div>
+            </div>
+        </aside>
+
+        <!-- Mobile Chat Toggle -->
+        <button id="chat-toggle" class="lg:hidden fixed bottom-6 right-6 z-30 w-14 h-14 bg-amber-500 rounded-full flex items-center justify-center text-black shadow-lg shadow-amber-500/20">
+            <i class="fas fa-comment-dots text-xl"></i>
+        </button>
+    </main>
+
+    <!-- Video.js Script -->
+    <script src="https://vjs.zencdn.net/8.3.0/video.min.js"></script>
+
+    <!-- Interactivity Script (Para Chat y Botón de Likes) -->
+    <script>
+        // Funcionalidad de Chat
+        const chatForm = document.getElementById('chat-form');
+        const chatInput = document.getElementById('chat-input');
+        const chatMessages = document.getElementById('chat-messages');
+
+        chatForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const text = chatInput.value.trim();
+            if (!text) return;
+
+            const msgDiv = document.createElement('div');
+            msgDiv.className = 'text-sm space-y-0.5 group animate-fade-in';
+            msgDiv.innerHTML = `
+                <span class="font-bold text-amber-400 mr-2">You</span>
+                <span class="text-white/80 leading-snug">${text}</span>
+            `;
+            chatMessages.appendChild(msgDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            chatInput.value = '';
+        });
+
+        // Funcionalidad de Likes
+        let likes = 4520;
+        const likeBtn = document.getElementById('like-btn');
+        const likeCount = document.getElementById('like-count');
+        likeBtn.addEventListener('click', () => {
+            likes++;
+            likeCount.textContent = likes;
+            likeBtn.querySelector('i').classList.add('text-red-500');
+        });
+
+        // Simula la cuenta de vistas en vivo sumando números aleatorios
+        let viewers = 128402;
+        const viewCountEl = document.getElementById('view-count');
+        setInterval(() => {
+            viewers += Math.floor(Math.random() * 50) - 20;
+            viewCountEl.textContent = viewers.toLocaleString();
+        }, 3000);
+
+        // Ocultar y mostrar el chat en móvil
+        const chatSidebar = document.getElementById('chat-sidebar');
+        const chatToggle = document.getElementById('chat-toggle');
+        chatToggle.addEventListener('click', () => {
+            if (chatSidebar.classList.contains('hidden')) {
+                chatSidebar.classList.remove('hidden');
+                chatSidebar.classList.add('absolute', 'right-0', 'top-0', 'z-50', 'w-80', 'border-l-0', 'flex');
+                chatToggle.innerHTML = '<i class="fas fa-times text-xl"></i>';
+            } else {
+                chatSidebar.classList.add('hidden');
+                chatSidebar.classList.remove('absolute', 'right-0', 'top-0', 'z-50', 'w-80', 'border-l-0', 'flex');
+                chatToggle.innerHTML = '<i class="fas fa-comment-dots text-xl"></i>';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -90,7 +90,7 @@ resource "aws_instance" "portal_cautivo" {
 
 resource "aws_instance" "iperf" {
   ami                    = data.aws_ami.ubuntu.id
-  instance_type          = "t2.micro"
+  instance_type          = "t3.medium"
   subnet_id              = aws_subnet.visitantes.id
   vpc_security_group_ids = [aws_security_group.sg_servicios.id]
   key_name               = var.key_name
@@ -139,7 +139,7 @@ resource "aws_instance" "soc_core" {
   subnet_id              = aws_subnet.soc.id
   vpc_security_group_ids = [aws_security_group.sg_servicios.id]
   key_name               = var.key_name
-  
+
   root_block_device {
     volume_size = 50 # Recomendable aumentar el disco para logs y BBDD
     volume_type = "gp3"
@@ -148,28 +148,35 @@ resource "aws_instance" "soc_core" {
   tags = { Name = "SOC-Core-Docker" }
 }
 
-
-
-# ─────────────────────────────────────────────────────────
-# SUBNET DMZ (10.0.5.0/24)
-# ─────────────────────────────────────────────────────────
-
-resource "aws_subnet" "dmz" {
-  vpc_id            = aws_vpc.main.id  # Asegúrate de que tu VPC se llama "main" en tu código
-  cidr_block        = "10.0.5.0/24"
-  availability_zone = "us-east-1a"     # Usa la misma zona que tus otras subredes
-  tags = { Name = "Subnet-DMZ" }
-}
-
+# ── Subnet DMZ ────────────────────────────────────────────
 resource "aws_instance" "web_server" {
   ami                    = data.aws_ami.ubuntu.id
-  instance_type          = "t2.micro"  # Para una web simple, con esto sobra
+  instance_type          = "t2.micro"
   subnet_id              = aws_subnet.dmz.id
-  vpc_security_group_ids = [aws_security_group.sg_servicios.id] # O crea uno nuevo específico para la DMZ
+  vpc_security_group_ids = [aws_security_group.sg_dmz.id]
   key_name               = var.key_name
-  private_ip             = "10.0.5.50" # Le fijamos una IP para tenerla controlada
+  private_ip             = "10.0.5.50"
   tags = { Name = "DMZ-WebServer" }
 }
+
+
+# ── Base de Datos — Subnet Gestión ───────────────────────
+resource "aws_instance" "database" {
+  ami                    = data.aws_ami.ubuntu.id
+  instance_type          = "t2.micro"
+  subnet_id              = aws_subnet.gestion.id
+  vpc_security_group_ids = [aws_security_group.sg_servicios.id]
+  key_name               = var.key_name
+  private_ip             = "10.0.4.10"
+
+  root_block_device {
+    volume_size = 20
+    volume_type = "gp3"
+  }
+
+  tags = { Name = "Gestion-MySQL" }
+}
+
 
 # ─────────────────────────────────────────────────────────
 # OUTPUTS
@@ -187,5 +194,6 @@ output "ips_privadas" {
     gestion_ftp         = aws_instance.ftp.private_ip
     soc_core_docker     = aws_instance.soc_core.private_ip
     dmz_web_server      = aws_instance.web_server.private_ip
+    gestion_database    = aws_instance.database.private_ip
   }
 }

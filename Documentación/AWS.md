@@ -1,4 +1,4 @@
-# Infraestructura de Red AWS — Palau Sant Jordi
+# Infraestructura de Red AWS 
  
 ## Índice
  
