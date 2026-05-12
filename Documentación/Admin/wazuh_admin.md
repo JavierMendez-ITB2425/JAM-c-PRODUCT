@@ -152,9 +152,10 @@ Asegurar que los siguientes puertos estén abiertos en el **Security Group** o F
 
 | Puerto | Protocolo | Uso |
 |---------|------------|-----|
-| 1514    | TCP        | Recepción de eventos de agentes |
-| 1515    | TCP        | Registro de agentes |
-| 55000   | TCP        | API de Wazuh |
+| 1514    | TCP        | Recepción de eventos de agentes (Entrada (Agentes)) |
+| 1515    | TCP        | Registro de agentes (Entrada (Agentes)) |
+| 55000   | TCP        | API de Wazuh (Local/Entrada) |
+| 8443    | TCP        | Dashboard Web (Entrada (Admin)) |
 
 ---
 
