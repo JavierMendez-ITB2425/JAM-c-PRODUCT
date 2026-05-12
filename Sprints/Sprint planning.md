@@ -205,6 +205,27 @@ El día de hoy realizaremos un check de que todas las máquinas funcionen sin pr
 **Proofhub:**
 <img width="1719" height="775" alt="image" src="https://github.com/user-attachments/assets/49244cd0-9a2e-4a13-a724-94ea05a7b85b" />
 
+**Fecha:** 12/05/2026
+
+## Resumen de la Jornada
+Hoy es el último día que tenemos para entregar el proyecto; el día de hoy realizaremos las últimas implementaciones en los servicios y las últimas documentaciones.
+
+---
+
+## Distribución de Tareas
+
+| Integrante | Responsabilidades |
+| :--- | :--- |
+| **Manuel** | Se encargará de documentar lo realizado los anteriores días. |
+| **Aritz** | Se encargará del sprint planning, el sprint review y de dar los toques de gracia en el SOC. |
+| **Javier** | Se encargará de implementar el IDS |
+| **Cesc** | Documentar la configuración de la página web y de la base de datos. |
+
+---
+**Proofhub:**
+<img width="1714" height="836" alt="image" src="https://github.com/user-attachments/assets/88a4315e-bb4b-4393-adb8-d402dfcbf5e9" />
+
+
 
 
 
